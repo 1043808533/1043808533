@@ -1,0 +1,42 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class PaperPlagiarismChecker {
+    public static void main(String[] args) {
+        String paper1 = "This is the content of paper 1.";
+        String paper2 = "This is the content of paper 2.";
+
+        double similarity = calculateSimilarity(paper1, paper2);
+        System.out.println("Similarity: " + similarity);
+    }
+
+    private static double calculateSimilarity(String paper1, String paper2) {
+        Map<String, Integer> wordFrequency1 = calculateWordFrequency(paper1);
+        Map<String, Integer> wordFrequency2 = calculateWordFrequency(paper2);
+
+        int commonWords = 0;
+        int totalWords = 0;
+
+        for (String word : wordFrequency1.keySet()) {
+            if (wordFrequency2.containsKey(word)) {
+                commonWords += Math.min(wordFrequency1.get(word), wordFrequency2.get(word));
+            }
+            totalWords += wordFrequency1.get(word);
+        }
+
+        double similarity = (double) commonWords / totalWords;
+        return similarity;
+    }
+
+    private static Map<String, Integer> calculateWordFrequency(String paper) {
+        Map<String, Integer> wordFrequency = new HashMap<>();
+
+        String[] words = paper.toLowerCase().split("\\s+");
+
+        for (String word : words) {
+            wordFrequency.put(word, wordFrequency.getOrDefault(word, 0) + 1);
+        }
+
+        return wordFrequency;
+    }
+}
